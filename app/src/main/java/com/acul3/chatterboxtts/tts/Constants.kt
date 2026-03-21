@@ -34,16 +34,16 @@ object Constants {
     // HuggingFace model repo
     const val HF_REPO_BASE = "https://huggingface.co/acul3/chatterbox-executorch/resolve/main"
 
-    // Model filenames
+    // Model filenames (must match HuggingFace repo exactly)
     val MODEL_FILES = listOf(
-        "cond_model.pte",
+        "voice_encoder.pte",
+        "xvector_encoder.pte",
+        "t3_cond_speech_emb.pte",
+        "t3_cond_enc.pte",
         "t3_prefill.pte",
         "t3_decode.pte",
         "s3gen_encoder.pte",
-        "cfm_step1.pte",
-        "cfm_step2.pte",
-        "hifigan.pte",
-        "tokenizer_encoder.pte",
-        "ve_model.pte"
+        "cfm_step.pte",
+        "hifigan.pte"
     )
 }

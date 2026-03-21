@@ -55,15 +55,15 @@ class ChatterboxTTS(private val context: Context) {
 
         // Load conditioning model
         onProgress(0.1f, "Loading conditioning model...")
-        condModel = PteModel(modelManager.getModelPath("cond_model.pte")).also { it.load() }
+        condModel = PteModel(modelManager.getModelPath("t3_cond_enc.pte")).also { it.load() }
 
         // Load VE model
         onProgress(0.2f, "Loading voice encoder...")
-        veModel = PteModel(modelManager.getModelPath("ve_model.pte")).also { it.load() }
+        veModel = PteModel(modelManager.getModelPath("voice_encoder.pte")).also { it.load() }
 
         // Load tokenizer encoder
         onProgress(0.3f, "Loading tokenizer encoder...")
-        tokenizerEncoder = PteModel(modelManager.getModelPath("tokenizer_encoder.pte")).also { it.load() }
+        tokenizerEncoder = PteModel(modelManager.getModelPath("t3_cond_speech_emb.pte")).also { it.load() }
 
         // Load T3 models
         onProgress(0.4f, "Loading T3 prefill...")
@@ -76,8 +76,8 @@ class ChatterboxTTS(private val context: Context) {
         onProgress(0.7f, "Loading S3Gen encoder...")
         val s3gen = PteModel(modelManager.getModelPath("s3gen_encoder.pte")).also { it.load() }
         onProgress(0.8f, "Loading CFM models...")
-        val cfm1 = PteModel(modelManager.getModelPath("cfm_step1.pte")).also { it.load() }
-        val cfm2 = PteModel(modelManager.getModelPath("cfm_step2.pte")).also { it.load() }
+        val cfm1 = PteModel(modelManager.getModelPath("cfm_step.pte")).also { it.load() }
+        val cfm2 = PteModel(modelManager.getModelPath("cfm_step.pte")).also { it.load() }
         onProgress(0.9f, "Loading HiFiGAN...")
         val hifigan = PteModel(modelManager.getModelPath("hifigan.pte")).also { it.load() }
         vocoderPipeline = VocoderPipeline(s3gen, cfm1, cfm2, hifigan)
