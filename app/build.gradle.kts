@@ -8,6 +8,11 @@ android {
     namespace = "com.acul3.chatterboxtts"
     compileSdk = 34
 
+    // Ensure binary assets are not compressed
+    androidResources {
+        noCompress += listOf("bin", "pte", "json")
+    }
+
     defaultConfig {
         applicationId = "com.acul3.chatterboxtts"
         minSdk = 26
