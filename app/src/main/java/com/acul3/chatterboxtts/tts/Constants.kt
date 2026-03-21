@@ -9,9 +9,19 @@ object Constants {
     const val EOT_TEXT = 0
 
     // Sequence lengths
+    // Text input to t3_prefill: SOT (1) + padded tokens (MAX_TEXT_LEN=256) + EOT (1) = 258
     const val MAX_TEXT_LEN = 256
+    const val TEXT_SEQ_LEN = 258   // MAX_TEXT_LEN + 2 (SOT + EOT)
+
+    // Conditioning sequence: speaker(1) + emotion(1) + perceiver_out(32) = 34 tokens
+    const val COND_LEN = 34
+
+    // Prefill length = COND_LEN + TEXT_SEQ_LEN + BOS_speech(1) = 34+258+1 = 293
     const val PREFILL_LEN = 293
-    const val MAX_KV_LEN = 1293
+
+    // KV cache dimensions
+    const val MAX_SPEECH_TOKENS = 1000
+    const val MAX_KV_LEN = 1293   // PREFILL_LEN + MAX_SPEECH_TOKENS
 
     // Model architecture
     const val N_LAYERS = 30
@@ -19,10 +29,15 @@ object Constants {
     const val HEAD_DIM = 64
 
     // Audio
-    const val HIFI_T_MEL = 300
-    const val T_MEL_FIXED = 2200
-    const val UPSAMPLE = 480
+    const val HIFI_T_MEL = 300      // mel frames per HiFiGAN chunk
+    const val T_MEL_FIXED = 2200    // fixed mel length for CFM
+    const val UPSAMPLE = 480        // audio samples per mel frame (8*5*3*4)
     const val S3GEN_SR = 24000
+
+    // Vocoder
+    const val MAX_SPEECH_TOKENS_VOCODER = 1000  // speech tokens padded to 1000
+    const val PROMPT_TOKENS_LEN = 75            // prompt tokens length
+    const val NB_HARMONICS_PLUS_1 = 9           // SineGen harmonics + 1
 
     // Generation parameters
     const val MAX_DECODE_STEPS = 750
@@ -36,8 +51,6 @@ object Constants {
 
     // Model filenames (must match HuggingFace repo exactly)
     val MODEL_FILES = listOf(
-        "voice_encoder.pte",
-        "xvector_encoder.pte",
         "t3_cond_speech_emb.pte",
         "t3_cond_enc.pte",
         "t3_prefill.pte",
