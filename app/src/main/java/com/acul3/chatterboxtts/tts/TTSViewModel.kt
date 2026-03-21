@@ -1,3 +1,4 @@
+import android.util.Log
 package com.acul3.chatterboxtts.tts
 
 import android.content.Context
@@ -125,12 +126,13 @@ class TTSViewModel : ViewModel() {
                 }
             }
         } catch (e: Exception) {
+            Log.e("TTSViewModel", "Generation failed", e)
             _state.update {
                 it.copy(
                     isGenerating = false,
                     progress = 0f,
                     progressMessage = "",
-                    error = "Generation failed: ${e.message}"
+                    error = "Generation failed: ${e.message}\n${e.stackTraceToString().take(500)}"
                 )
             }
         }
