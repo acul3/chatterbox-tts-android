@@ -172,7 +172,7 @@ class ChatterboxTTS(private val context: Context) {
     private fun loadDefaultConditioning() {
         try {
             speakerEmb = loadFloatAsset("speaker_emb.bin", longArrayOf(1, 256))
-            condSpeechTokens = loadLongAsset("cond_speech_tokens.bin", longArrayOf(1, 150))
+            condSpeechTokens = loadIntAsset("cond_speech_tokens.bin", longArrayOf(1, 150))
             emotionAdv = loadFloatAsset("emotion_adv.bin", longArrayOf(1, 1, 1))
             Log.i(TAG, "Loaded conditioning tensors from assets")
         } catch (e: Exception) {
@@ -218,14 +218,13 @@ class ChatterboxTTS(private val context: Context) {
         return Tensor.fromBlob(floats, shape)
     }
 
-    fun loadLongAsset(name: String, shape: LongArray): Tensor {
+    fun loadIntAsset(name: String, shape: LongArray): Tensor {
         val bytes = context.assets.open(name).readBytes()
         val buffer = ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN)
-        // Assets are saved as int32 for Android compatibility
         val ints = IntArray(bytes.size / 4)
         buffer.asIntBuffer().get(ints)
-        // ExecuTorch needs long[] for integer tensors
-        return Tensor.fromBlob(ints.map { it.toLong() }.toLongArray(), shape)
+        // ExecuTorch Android: int[] creates INT32 tensor (matches re-exported models)
+        return Tensor.fromBlob(ints, shape)
     }
 
     fun close() {
