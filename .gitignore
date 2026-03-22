@@ -12,4 +12,5 @@ local.properties
 *.apk
 *.aab
 *.pte
-*.bin
+# Keep .bin assets for conditioning data
+!app/src/main/assets/*.bin
