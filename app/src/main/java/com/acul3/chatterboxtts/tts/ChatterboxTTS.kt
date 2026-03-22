@@ -221,9 +221,11 @@ class ChatterboxTTS(private val context: Context) {
     fun loadLongAsset(name: String, shape: LongArray): Tensor {
         val bytes = context.assets.open(name).readBytes()
         val buffer = ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN)
-        val longs = LongArray(bytes.size / 8)
-        buffer.asLongBuffer().get(longs)
-        return Tensor.fromBlob(longs, shape)
+        // Assets are saved as int32 for Android compatibility
+        val ints = IntArray(bytes.size / 4)
+        buffer.asIntBuffer().get(ints)
+        // ExecuTorch needs long[] for integer tensors
+        return Tensor.fromBlob(ints.map { it.toLong() }.toLongArray(), shape)
     }
 
     fun close() {
