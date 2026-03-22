@@ -55,7 +55,7 @@ class ChatterboxTTS(private val context: Context) {
     }
 
     fun loadModels(onProgress: (Float, String) -> Unit) {
-        if (t3Decoder != null) {
+        if (t3Decoder != null && cachedCondEmb != null) {
             onProgress(1f, "Models already loaded")
             return
         }
@@ -93,7 +93,12 @@ class ChatterboxTTS(private val context: Context) {
 
         // Pre-compute cond_emb (speaker-specific, can be cached)
         onProgress(0.95f, "Pre-computing conditioning embedding...")
-        precomputeCondEmb()
+        try {
+            precomputeCondEmb()
+        } catch (e: Exception) {
+            Log.e(TAG, "precomputeCondEmb FAILED", e)
+            throw RuntimeException("Conditioning failed: ${e.message}\n${e.stackTraceToString().take(300)}", e)
+        }
 
         onProgress(1f, "All models loaded!")
         Log.i(TAG, "All models loaded successfully")
